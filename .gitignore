@@ -14,6 +14,10 @@ venv/
 .coverage
 htmlcov/
 
+# Local AI tooling
+.claude/settings.local.json
+graphify-out/
+
 # Editors / OS
 .vscode/
 .idea/

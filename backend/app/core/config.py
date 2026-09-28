@@ -1,0 +1,17 @@
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
+
+class Settings(BaseSettings):
+    """Application settings loaded from environment variables (and .env files)."""
+
+    model_config = SettingsConfigDict(
+        # Later files take priority: backend/.env overrides the repo-root .env.
+        env_file=("../.env", ".env"),
+        extra="ignore",
+    )
+
+    app_name: str = "SupplyGuard API"
+    database_url: str
+
+
+settings = Settings()
