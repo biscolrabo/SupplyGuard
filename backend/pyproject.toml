@@ -37,5 +37,6 @@ target-version = "py313"
 [tool.pylint.typecheck]
 ignored-modules = ["alembic.context"]
 
+
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B"]
