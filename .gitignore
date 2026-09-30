@@ -15,7 +15,7 @@ venv/
 htmlcov/
 
 # Local AI tooling
-.claude/settings.local.json
+.claude/
 graphify-out/
 
 # Editors / OS
