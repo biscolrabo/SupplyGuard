@@ -8,8 +8,16 @@ from app.models import Base
 
 config = context.config
 
+# "alembic -x db=test upgrade head" migra la BD de tests en lugar de la principal
+if context.get_x_argument(as_dictionary=True).get("db") == "test":
+    if not settings.test_database_url:
+        raise RuntimeError("TEST_DATABASE_URL is not set")
+    database_url = settings.test_database_url
+else:
+    database_url = settings.database_url
+
 # Se duplica el % porque alembic.ini lo interpreta como carácter especial
-config.set_main_option("sqlalchemy.url", settings.database_url.replace("%", "%%"))
+config.set_main_option("sqlalchemy.url", database_url.replace("%", "%%"))
 
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)

@@ -1,14 +1,30 @@
 from typing import Annotated
 
-from fastapi import Depends, FastAPI, HTTPException, status
+from fastapi import Depends, FastAPI, HTTPException, Request, status
+from fastapi.responses import JSONResponse
 from sqlalchemy import text
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
+from app.api import suppliers
 from app.core.config import settings
 from app.core.database import get_db
+from app.core.exceptions import ConflictError, NotFoundError
 
 app = FastAPI(title=settings.app_name, version="0.1.0")
+
+app.include_router(suppliers.router)
+
+
+# Traducen los errores de los servicios a respuestas HTTP
+@app.exception_handler(NotFoundError)
+def not_found_handler(_: Request, exc: NotFoundError) -> JSONResponse:
+    return JSONResponse(status_code=status.HTTP_404_NOT_FOUND, content={"detail": str(exc)})
+
+
+@app.exception_handler(ConflictError)
+def conflict_handler(_: Request, exc: ConflictError) -> JSONResponse:
+    return JSONResponse(status_code=status.HTTP_409_CONFLICT, content={"detail": str(exc)})
 
 
 @app.get("/health", tags=["health"])
