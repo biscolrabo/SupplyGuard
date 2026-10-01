@@ -6,6 +6,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.models.base import Base
 
 if TYPE_CHECKING:
+    from app.models.incident import Incident
     from app.models.supplier import Supplier
 
 
@@ -20,3 +21,4 @@ class Part(Base):
     description: Mapped[str | None] = mapped_column(String(255))
 
     supplier: Mapped["Supplier"] = relationship(back_populates="parts")
+    incidents: Mapped[list["Incident"]] = relationship(back_populates="part")

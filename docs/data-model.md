@@ -43,8 +43,8 @@ erDiagram
     INCIDENTS {
         int id PK
         int part_id FK
-        int reported_by FK
-        int analyzed_by FK "opcional"
+        int reported_by_id FK
+        int analyzed_by_id FK "opcional"
         string title
         string description
         string severity "low | medium | high | critical"
@@ -57,7 +57,7 @@ erDiagram
     ACTION_PLANS {
         int id PK
         int incident_id FK, UK
-        int created_by FK
+        int created_by_id FK
         string description
         datetime created_at
     }
@@ -65,7 +65,7 @@ erDiagram
     TASKS {
         int id PK
         int action_plan_id FK
-        int assigned_to FK
+        int assigned_to_id FK
         string title
         date due_date
         datetime completed_at "opcional"
@@ -95,5 +95,7 @@ erDiagram
 - **Una incidencia tiene como máximo un plan de acción.** Por eso `incident_id` es único en `action_plans`.
 - **Una tarea está completada si tiene `completed_at`.** No hace falta un campo de estado aparte, y sirve para calcular cuándo se terminó. Una incidencia se puede cerrar cuando todas las tareas de su plan están completadas.
 - **El historial no se modifica ni se borra.** Cada cambio de estado o acción importante añade una fila nueva.
+- **Las claves foráneas a usuarios terminan en `_id`** (`reported_by_id`, `assigned_to_id`...). Así se distinguen de la relación en Python (`incident.reported_by` devuelve el objeto `User`).
+- **Las tareas dependen de su plan:** si se quita una tarea de la lista del plan, se borra. El resto de borrados están bloqueados por las claves foráneas, para no perder historial.
 - **Una pieza no se repite:** la combinación proveedor + referencia + lote es única.
 - **Estados, gravedades y roles** se guardan como texto con valores fijos en inglés (enumerados en el código, con una restricción `CHECK` en la base de datos), no como tablas aparte.

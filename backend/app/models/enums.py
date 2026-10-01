@@ -23,11 +23,14 @@ class IncidentStatus(StrEnum):
     CLOSED = "closed"
 
 
-def enum_column_type(enum_class: type[StrEnum]) -> Enum:
-    """Guarda el enum como texto (VARCHAR) con un CHECK que solo admite sus valores."""
+def enum_column_type(enum_class: type[StrEnum], name: str | None = None) -> Enum:
+    """Guarda el enum como texto (VARCHAR) con un CHECK que solo admite sus valores.
+
+    `name` da nombre al CHECK; hace falta si una tabla usa el mismo enum en dos columnas.
+    """
     return Enum(
         enum_class,
-        name=enum_class.__name__.lower(),
+        name=name or enum_class.__name__.lower(),
         native_enum=False,
         create_constraint=True,
         length=30,

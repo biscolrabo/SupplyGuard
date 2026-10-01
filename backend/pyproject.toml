@@ -38,6 +38,16 @@ extend-exclude = ["alembic/versions"]
 [tool.pylint.typecheck]
 ignored-modules = ["alembic.context"]
 
+[tool.pylint."messages control"]
+disable = [
+    "missing-module-docstring",
+    "missing-class-docstring",
+    "missing-function-docstring",
+    "too-few-public-methods",
+    # Falso positivo con sqlalchemy.func (func.now(), func.count()...)
+    "not-callable",
+]
+
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B"]
