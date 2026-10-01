@@ -20,7 +20,7 @@ erDiagram
         string email UK
         string full_name
         string password_hash
-        string role "operario | ingeniero | admin"
+        string role "operator | engineer | admin"
         boolean is_active
         datetime created_at
     }
@@ -28,7 +28,7 @@ erDiagram
     SUPPLIERS {
         int id PK
         string name UK
-        string contact_email
+        string contact_email "opcional"
         boolean is_active
     }
 
@@ -37,7 +37,7 @@ erDiagram
         int supplier_id FK
         string reference
         string lot
-        string description
+        string description "opcional"
     }
 
     INCIDENTS {
@@ -47,8 +47,8 @@ erDiagram
         int analyzed_by FK "opcional"
         string title
         string description
-        string severity "baja | media | alta | critica"
-        string status "abierta | en_analisis | accion_correctiva | cerrada"
+        string severity "low | medium | high | critical"
+        string status "open | in_analysis | corrective_action | closed"
         string photo_url "opcional"
         datetime created_at
         datetime closed_at "opcional"
@@ -95,4 +95,5 @@ erDiagram
 - **Una incidencia tiene como máximo un plan de acción.** Por eso `incident_id` es único en `action_plans`.
 - **Una tarea está completada si tiene `completed_at`.** No hace falta un campo de estado aparte, y sirve para calcular cuándo se terminó. Una incidencia se puede cerrar cuando todas las tareas de su plan están completadas.
 - **El historial no se modifica ni se borra.** Cada cambio de estado o acción importante añade una fila nueva.
-- **Estados, gravedades y roles** se guardarán como texto con valores fijos (enumerados en el código), no como tablas aparte.
+- **Una pieza no se repite:** la combinación proveedor + referencia + lote es única.
+- **Estados, gravedades y roles** se guardan como texto con valores fijos en inglés (enumerados en el código, con una restricción `CHECK` en la base de datos), no como tablas aparte.
