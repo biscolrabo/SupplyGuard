@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 
 from app.core.exceptions import ConflictError, NotFoundError
 from app.models import Supplier
-from app.schemas.supplier import SupplierCreate, SupplierUpdate
+from app.schemas.supplier_schema import SupplierCreate, SupplierUpdate
 
 
 def list_suppliers(db: Session, active: bool | None = None) -> list[Supplier]:
@@ -43,7 +43,8 @@ def update_supplier(db: Session, supplier_id: int, data: SupplierUpdate) -> Supp
 
 def _ensure_name_is_free(db: Session, name: str, exclude_id: int | None = None) -> None:
     # Sin distinguir mayúsculas: "Metalex" y "METALEX" son el mismo proveedor
-    query = select(Supplier.id).where(func.lower(Supplier.name) == name.lower())
+    query = select(Supplier.id).where(
+        func.lower(Supplier.name) == name.lower())
     if exclude_id is not None:
         query = query.where(Supplier.id != exclude_id)
     if db.scalar(query) is not None:
