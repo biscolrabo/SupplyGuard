@@ -9,7 +9,7 @@ from sqlalchemy.orm import Session
 from app.api import suppliers
 from app.core.config import settings
 from app.core.database import get_db
-from app.core.exceptions import ConflictError, NotFoundError
+from app.core.exceptions import BusinessRuleError, ConflictError, NotFoundError
 
 app = FastAPI(title=settings.app_name, version="0.1.0")
 
@@ -25,6 +25,11 @@ def not_found_handler(_: Request, exc: NotFoundError) -> JSONResponse:
 @app.exception_handler(ConflictError)
 def conflict_handler(_: Request, exc: ConflictError) -> JSONResponse:
     return JSONResponse(status_code=status.HTTP_409_CONFLICT, content={"detail": str(exc)})
+
+
+@app.exception_handler(BusinessRuleError)
+def business_rule_handler(_: Request, exc: BusinessRuleError) -> JSONResponse:
+    return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content={"detail": str(exc)})
 
 
 @app.get("/health", tags=["health"])

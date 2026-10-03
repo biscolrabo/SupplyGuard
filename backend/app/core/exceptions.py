@@ -5,3 +5,7 @@ class NotFoundError(Exception):
 
 class ConflictError(Exception):
     pass
+
+
+class BusinessRuleError(Exception):
+    pass

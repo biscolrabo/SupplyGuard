@@ -1,7 +1,7 @@
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
-from app.core.exceptions import ConflictError, NotFoundError
+from app.core.exceptions import BusinessRuleError, ConflictError, NotFoundError
 from app.core.security import hash_password
 from app.models import User
 from app.models.enums import Role
@@ -53,3 +53,10 @@ def update_user(db: Session, user_id: int, data: UserUpdate) -> User:
 def _ensure_email_is_free(db: Session, email: str) -> None:
     if get_user_by_email(db, email) is not None:
         raise ConflictError(f"User with email '{email}' already exists")
+
+
+def get_active_user(db: Session, user_id: int) -> User:
+    user = get_user(db, user_id)
+    if not user.is_active:
+        raise BusinessRuleError(f"User {user_id} is not active")
+    return user
